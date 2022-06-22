@@ -1,0 +1,38 @@
+<odoo>
+    <data>
+      <record model="ir.ui.view" id="res_config_settings_view_inherit_resinas_form">
+        <field name="name">res.config.settings.resinas</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+          <xpath expr="//div[@id='proforma_configuration']" position="after">
+            <div class="col-12 col-lg-6 o_setting_box" id="down_payments">
+              <div class="o_setting_left_pane"/>
+              <div class="o_setting_right_pane">
+                  <span class="o_form_label">Tipo de Crédito</span>
+                  <div class="text-muted">
+                      Escoja la moneda
+                  </div>
+                  <div class="text-muted">
+                      <field name="tipo_credito"/>
+                  </div>
+              </div>
+          </div>
+          </xpath>
+        </field>
+      </record>
+
+      <!-- <record model="ir.ui.view" id="view_partner_inherit_resinas_form">
+        <field name="name">res.partner.resinas</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+          <field name="category_id" position="after">
+            <field name="switch_modifica_credito" invisible="1"/>
+            <field name="tipo_credito" attrs="{'readonly':[('switch_modifica_credito','not in',[True])]}"/>
+            <field name="linea_credito" attrs="{'readonly':[('switch_modifica_credito','not in',[True])]}"/>
+          </field>
+        </field>
+      </record> -->
+    </data>
+</odoo>

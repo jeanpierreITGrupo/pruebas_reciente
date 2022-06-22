@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    
+    <template id='report_saleorder_document_watermark' inherit_id="sale.report_saleorder_document">
+        <xpath expr="//div[@class='page']" position="inside">
+            <t t-if="doc.state in ['draft','sent']">
+                <t t-if="doc.margin_error or doc.sale_line_cero_error">
+                    <style>
+                        .watermark {
+                            position: absolute;
+                            opacity: 0.25;
+                            z-index: 1000;
+                            transform: rotate(300deg);
+                            -webkit-transform: rotate(300deg);
+                            width: 150%;
+                            font-size: 70px;
+                            color: skyblue;
+                        }
+                    </style>
+                    
+                    <div class="watermark" style="margin-left:-50px;margin-top:-250px">
+                        <p>NO APROBADA</p>
+                    </div>
+                </t>
+            </t>
+        </xpath>
+    </template>
+
+</odoo>

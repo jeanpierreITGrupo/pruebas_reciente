@@ -1,0 +1,66 @@
+<odoo>
+  <data>
+
+    <record model="ir.ui.view" id="view_order_inherit_resinas_form">
+      <field name="name">sale.order.resina</field>
+      <field name="model">sale.order</field>
+      <field name="inherit_id" ref="sale.view_order_form"/>
+      <field name="arch" type="xml">
+        <field name="commitment_date" position="attributes">
+          <attribute name="attrs">{'readonly':[('state','in',['sale','done','cancel'])]}</attribute>
+        </field>
+        <button name="action_confirm" position="attributes">
+          <attribute name="invisible">1</attribute>
+        </button>
+        <xpath expr="//button[@name='action_confirm'][1]" position="attributes">
+          <attribute name="states" /> <!-- delete states attribute, it's influencing invisible behaviour -->
+          <attribute name="invisible">1</attribute>
+        </xpath>
+        <xpath expr="//button[@name='action_confirm'][2]" position="attributes">
+          <attribute name="states" /> <!-- delete states attribute, it's influencing invisible behaviour -->
+          <attribute name="invisible">1</attribute>
+        </xpath>
+        <xpath expr="//button[@name='action_quotation_send'][2]" position="after">
+          <button name="action_confirm_to_approve" data-hotkey="v"
+                  string="Confirm" type="object"
+                  attrs="{'invisible': [('state', 'not in', ['sent'])]}"/>
+          <button name="action_confirm_to_approve" data-hotkey="v"
+                  string="Confirmar" type="object"
+                  attrs="{'invisible': [('state', 'not in', ['draft'])]}"/>
+          <button name="action_approve" data-hotkey="v"
+                  string="Aprobar" type="object"
+                  attrs="{'invisible': [('state', 'not in', ['to approve'])]}"
+                  groups="sale_order_resinas_cm_it.group_sale_order_approve"/>
+          <button name="action_disapprove" data-hotkey="v"
+                  string="Desaprobar" type="object"
+                  attrs="{'invisible': [('state', 'not in', ['to approve'])]}"
+                  groups="sale_order_resinas_cm_it.group_sale_order_approve"/>
+        </xpath>
+        <field name="payment_term_id" position="after">
+          <label for="margin_error" string="Cotización no cumple márgen"/>
+          <div class="d-flex">
+              <field name="margin_error" force_save="1"/>
+              <field name="margin_sale_compute"/>
+          </div>
+          <field name="sale_line_cero_error"/>          
+        </field>
+        
+      </field>
+    </record>
+
+    <record model="ir.ui.view" id="sale_margin_sale_order_line_inh_res__form">
+      <field name="name">sale_margin_sale_order_line_inh_res__form</field>
+      <field name="model">sale.order</field>
+      <field name="inherit_id" ref="sale_margin.sale_margin_sale_order_line_form"/>
+      <field name="arch" type="xml">
+        <xpath expr="//field[@name='order_line']/tree//field[@name='price_unit']" position="after">
+          <field name="edit_margin_group" invisible="1"/>
+        </xpath>
+        <xpath expr="//field[@name='order_line']/tree//field[@name='purchase_price']" position="attributes">
+          <attribute name="attrs">{'readonly':[('edit_margin_group','=',False)]}</attribute>
+        </xpath>
+      </field>
+    </record>
+
+  </data>
+</odoo>
