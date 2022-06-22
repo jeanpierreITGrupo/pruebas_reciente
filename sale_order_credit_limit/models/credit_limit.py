@@ -254,12 +254,92 @@ class sale_order(models.Model):
         for i in self:
             if i.partner_id:
                 if i.partner_id.credit_limit != 0:
-                    factura = self.env['account.move'].sudo().search([('id','=',5)])
+                    facturas = self.env['account.move'].sudo().search([('partner_id','=',i.partner_id.id),('company_id','=',i.company_id.id), ('state','=','posted'),('move_type','in',['out_invoice','out_refund'])])
+                    facturas_view = []
+                    info = ""
+                    enviar = False
+                    if len(facturas)>0:
+                        mensaje = ""
+                        vencido_msg = ""
+                        monto_total_moneda_cliente = 0.00
+                        for f in facturas:                            
+                            if f.sudo().vencido == "Vencida" or f.sudo().amount_residual != 0:
+                                enviar = True
+                                if f.sudo().currency_id == i.partner_id.moneda:
+                                    if f.sudo().vencido == "Vencida":
+                                        vencido_msg = " │ "+ "Factura Vencida"
+                                    mensaje += str(f.sudo().name) + " │ "+ "Facturada Con La Misma Moneda Que El Crédito Del Cliente.  Total:" + " │ " + str(i.partner_id.moneda.symbol)+ str(f.sudo().amount_residual)+ vencido_msg +  "\n"
+                                    monto_total_moneda_cliente += f.sudo().amount_residual
+                                else:                            
+                                    tasa_cambio = self.env['res.currency.rate'].sudo().search([('currency_id.name','=','USD'),('name','=', f.sudo().invoice_date),('company_id','=',f.sudo().company_id.id)], limit=1)
+                                    if tasa_cambio:
+                                        if f.sudo().vencido == "Vencida":
+                                            vencido_msg = " │ "+ "Factura Vencida"                                        
+                                        if i.partner_id.moneda.name == 'USD':
+                                            mensaje += str(f.sudo().name) + " │ "+ "Facturada Con La Moneda "+ str(f.sudo().currency_id.symbol)+ " │ "+ "Total: "+str(f.sudo().amount_residual)+ " │ "+ "Tasa De Cambio: "+str(tasa_cambio.sale_type) +" │ "+"Total En Tasa de Cambio: "+str(f.sudo().amount_residual / tasa_cambio.sale_type)+vencido_msg  +"\n"
+                                            tasa_cambio_valor_venta = tasa_cambio.sale_type
+                                            monto_total_moneda_cliente += f.sudo().amount_residual / tasa_cambio_valor_venta
+                                        if i.partner_id.moneda.name == 'PEN':
+                                            mensaje += str(f.sudo().name) + " │ "+ "Facturada Con La Moneda "+ str(f.sudo().currency_id.symbol)+ " │ "+ "Total: "+str(f.sudo().amount_residual)+ " │ "+ "Tasa De Cambio: "+str(tasa_cambio.sale_type) +" │ "+"Total En Tasa de Cambio: "+str(f.sudo().amount_residual * tasa_cambio.sale_type)+vencido_msg  +"\n"
+                                            tasa_cambio_valor_venta = tasa_cambio.sale_type
+                                            monto_total_moneda_cliente += f.sudo().amount_residual * tasa_cambio_valor_venta
+                                        if i.partner_id.moneda.name != 'PEN' and i.partner_id.moneda.name != 'USD':
+                                            raise UserError("no hay tasa de cambio Las Monedas Autorizadas Para Limites de Creditos del Contacto Son Soles y Dolares")
+                                    else:
+                                        mensaje += "no hay tasa de cambio a la fecha para la factura " + str(f.sudo().name)+"Si Esto Se Produjo Por Eliminacion De Una Tasa de Cambio, Por Favor Crearla Nuevamente"+"\n"
+                        if enviar==True:
+                            info = mensaje + "\n" + "Total Facturas: " + str(i.partner_id.moneda.symbol)+ str(monto_total_moneda_cliente) + " Credito Del Cliente: " + str(i.partner_id.moneda.symbol)+ str(i.partner_id.credit_limit) + " Crédito Restante Del Cliente con el Total Facturas: " + str(i.partner_id.moneda.symbol) + str(i.partner_id.credit_limit - monto_total_moneda_cliente)
+
+                        for factura in facturas:
+                            factura.sudo().refresh()
+                            if factura.sudo().vencido == "Vencida":
+                                if factura in facturas_view:
+                                    pass
+                                else:
+                                    facturas_view.append(factura)
+                            if factura.sudo().amount_residual != 0:
+                                if factura in facturas_view:
+                                    pass
+                                else:
+                                    facturas_view.append(factura)
+                    if len(facturas_view)>0:                    
+                        ctx = {
+                        'default_facturas_ids': [(6, 0, [(rid.id)for rid in facturas_view])],
+                        'default_name': i.partner_id.id,
+                        'default_moneda': i.partner_id.moneda.id if i.partner_id.moneda.id else False,
+                        'default_state': 'draft',
+                        'default_total_tasa_cambio_text' : info,
+                        }
+                        return {
+                            'name': _('Historial'),
+                            'type': 'ir.actions.act_window',
+                            'view_type': 'form',
+                            'view_mode': 'form',
+                            'target': 'new',
+                            'res_model': 'sale.history',
+                            'context': ctx,
+                            }
+                    else:                    
+                        ctx = {                                
+                        'default_name': i.partner_id.id,
+                        'default_moneda': i.partner_id.moneda.id if i.partner_id.moneda.id else False,
+                        'default_state': 'draft',
+                        'default_total_tasa_cambio_text' : info,
+                        }
+                        return {
+                            'name': _('Historial'),
+                            'type': 'ir.actions.act_window',
+                            'view_type': 'form',
+                            'view_mode': 'form',
+                            'target': 'new',
+                            'res_model': 'sale.history',
+                            'context': ctx,
+                            }
+                else:
                     ctx = {
-                    'default_facturas_ids': [(6, 0, [factura.sudo().id])],
-                    'default_name': i.partner_id.id,
-                    'default_moneda': i.partner_id.moneda.id if i.partner_id.moneda.id else False,
-                    'default_state': 'draft',                    
+                        'default_name': i.partner_id.id,
+                        'default_moneda': i.partner_id.moneda.id if i.partner_id.moneda.id else False,
+                        'default_state': 'draft',
                         }
                     return {
                         'name': _('Historial'),
@@ -270,4 +350,5 @@ class sale_order(models.Model):
                         'res_model': 'sale.history',
                         'context': ctx,
                         }
-                    
+           
+           
