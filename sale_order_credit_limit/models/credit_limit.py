@@ -302,14 +302,27 @@ class sale_order(models.Model):
                                     pass
                                 else:
                                     facturas_view.append(factura)
-                    if len(facturas_view)>0:                    
-                        ctx = {
-                        'default_facturas_ids': [(6, 0, [(rid.id)for rid in facturas_view])],
-                        'default_name': i.partner_id.id,
-                        'default_moneda': i.partner_id.moneda.id if i.partner_id.moneda.id else False,
-                        'default_state': 'draft',
-                        'default_total_tasa_cambio_text' : info,
-                        }
+                    if len(facturas_view)>0:
+                        if self.env.user.has_group("sales_team.group_sale_salesman"):
+                            facturas_propias = []
+                            for x in facturas_view:
+                                if x.sudo().invoice_user_id == False or x.sudo().invoice_user_id == self.env.user.id:
+                                    facturas_propias.append(x)
+                            ctx = {
+                                'default_facturas_ids': [(6, 0, [(rid.id)for rid in facturas_propias])],
+                                'default_name': i.partner_id.id,
+                                'default_moneda': i.partner_id.moneda.id if i.partner_id.moneda.id else False,
+                                'default_state': 'draft',
+                                'default_total_tasa_cambio_text' : info + "\n"+"Si Existiera Una Linea De Factura No Visible En La Pestaña Facturas Es Debido A Sus Permisos De Mostrar Solo Facturas Propias",
+                                }
+                        else:
+                            ctx = {
+                                'default_facturas_ids': [(6, 0, [(rid.id)for rid in facturas_view])],
+                                'default_name': i.partner_id.id,
+                                'default_moneda': i.partner_id.moneda.id if i.partner_id.moneda.id else False,
+                                'default_state': 'draft',
+                                'default_total_tasa_cambio_text' : info,
+                                }
                         return {
                             'name': _('Historial'),
                             'type': 'ir.actions.act_window',
