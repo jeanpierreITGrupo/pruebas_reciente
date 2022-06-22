@@ -47,7 +47,7 @@ class res_partner(models.Model):
         for i in self:
             i.refresh()
             if i.credit_limit != 0:
-                if i.moneda:
+                if i.moneda.id:
                     pass
                 else:
                     raise UserError("No Puede Ingresar Un Limite De Crédito Sin Moneda")            
