@@ -256,7 +256,7 @@ class sale_order(models.Model):
                 if i.partner_id.credit_limit != 0:
                     factura = self.env['account.move'].sudo().search([('id','=',5)])
                     ctx = {
-                    'default_facturas_ids': [(6, 0, factura.id)],
+                    'default_facturas_ids': [(6, 0, [factura.id])],
                     'default_name': i.partner_id.id,
                     'default_moneda': i.partner_id.moneda.id if i.partner_id.moneda.id else False,
                     'default_state': 'draft',                    
