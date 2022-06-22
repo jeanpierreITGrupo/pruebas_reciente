@@ -50,7 +50,7 @@ class res_partner(models.Model):
                 if i.moneda.id:
                     pass
                 else:
-                    raise UserError("No Puede Ingresar Un Limite De Crédito Sin Moneda")            
+                    raise UserError("No Puede Ingresar Un Limite De Crédito Sin Moneda" + str(i.moneda.id) + " - "+str(i.credit_limit))
             else:
                 pass
           
