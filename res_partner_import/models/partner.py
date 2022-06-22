@@ -329,11 +329,12 @@ class gen_partner_s(models.TransientModel):
 							'comment':values.get('notas').strip() if values.get('notas').strip()!='' else False,
 							'is_not_home':is_not_home_v,
 							'moneda':moneda,
-							'credit_limit':values.get('credit_limit'),
 							'company_id':company_id_v
 							  }
 		
 		res = self.env['res.partner'].create(vals)
+		if values.get('credit_limit'):
+			res.credit_limit = values.get('credit_limit')
 		return res
 
 	def verify_if_exists_partner(self):
@@ -739,9 +740,10 @@ class gen_partner_s(models.TransientModel):
 										'comment':line[26].strip() if line[26].strip()!='' else False,
 										'is_not_home':is_not_home_v,
 										'moneda':moneda,
-										'credit_limit':line[29],
 										'company_id':company_id_v
             									})
+					if line[29]:
+						search_partner.credit_limit = line[29]
 					if search_partner.customer_rank < 1 and is_customer:
 							search_partner.write({'customer_rank':1})
 					if search_partner.supplier_rank < 1 and is_supplier:
