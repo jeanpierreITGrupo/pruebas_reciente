@@ -66,25 +66,6 @@
                             </group>                            
                         </group>
                         <notebook>
-                            <page string="Facturas del Cliente">
-                                <field name="state" invisible="1"></field>
-                                <field name="facturas_ids" readonly="1" nolabel="True">                                    
-                                    <tree>
-                                        <field name="state" invisible="1"/>
-                                        <field name="amount_residual" invisible="1"/>
-                                        <field name="company_id" invisible="1"/>
-                                        <field name="limit_days_invoice" invisible="1"/>
-                                        <field name="currency_id" invisible="1"/>
-                                        <field name="invoice_date" invisible="1"/>
-                                        <field name="ref"/>
-                                        <field name="vencido"/>
-                                        <field name="limit_days_invoice"/>
-                                        <field name="invoice_date_due"/>
-                                        <field name="amount_total"/>
-                                        <field name="amount_residual"/>
-                                    </tree>
-                                </field>
-                            </page>
                             <page string="Información Adicional">
                                 <field name="total_tasa_cambio_text" nolabel="True" readonly="1"/>
                               </page>
