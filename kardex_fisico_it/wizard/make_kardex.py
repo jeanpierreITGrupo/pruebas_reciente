@@ -609,8 +609,8 @@ class make_kardex_lote(models.TransientModel):
 		from xlsxwriter.workbook import Workbook
 		output = io.BytesIO()
 
-		#direccion = self.env['main.parameter'].search([])[0].dir_create_file
-		workbook = Workbook(output, {'constant_memory': True})
+		direccion = self.env['main.parameter'].search([])[0].dir_create_file
+		workbook = Workbook(direccion +'kardex_producto.xlsx')
 		worksheet = workbook.add_worksheet("Kardex")
 		bold = workbook.add_format({'bold': True})
 		bold.set_font_size(8)
@@ -660,28 +660,33 @@ class make_kardex_lote(models.TransientModel):
 		worksheet.write(3,1,str(self.ffin))
 		import datetime
 
-		worksheet.write(8,11, "Ingreso",boldbord)
-		worksheet.write(8,12, "Salida",boldbord)		
-		worksheet.write(8,13, "Saldo",boldbord)
 
-		worksheet.write(9,0, u"Fecha",boldbord)
-		worksheet.write(9,1, u"Hora",boldbord)
-		worksheet.write(9,2, u"Ubicacion Origen",boldbord)
-		worksheet.write(9,3, u"Ubicacion Destino",boldbord)
-		worksheet.write(9,4, u"Almacen",boldbord)
-		worksheet.write(9,5, u"Tipo de Operación",boldbord)
-		worksheet.write(9,6, u"Categoria",boldbord)
-		worksheet.write(9,7, u"Producto",boldbord)
-		worksheet.write(9,8, u"Codigo P.",boldbord)
-		worksheet.write(9,9, u"Lote",boldbord)
-		worksheet.write(9,10, u"Unidad",boldbord)
-		worksheet.write(9,11, u"Doc. Almacen",boldbord)
+		worksheet.merge_range(8,0,9,0, u"Fecha",boldbord)
+		worksheet.merge_range(8,1,9,1, u"Hora",boldbord)
+
+		worksheet.merge_range(8,2,9,2, u"Ubicacion Origen",boldbord)
+		worksheet.merge_range(8,3,9,3, u"Ubicacion Destino",boldbord)
+		worksheet.merge_range(8,4,9,4, u"Almacen",boldbord)
+		worksheet.merge_range(8,5,9,5, u"Tipo de Operación",boldbord)
+		worksheet.merge_range(8,6,9,6, u"Categoria",boldbord)
+
+		worksheet.merge_range(8,7,9,7, u"Producto",boldbord)
+		worksheet.merge_range(8,8,9,8, u"Codigo P.",boldbord)
+		worksheet.merge_range(8,9,9,9, u"Lote",boldbord)
+		worksheet.merge_range(8,10,9,10, u"Unidad",boldbord)
+
+		worksheet.merge_range(8,11,9,11, u"Doc. Almacen",boldbord)
+
+		worksheet.write(8,12, "Ingreso",boldbord)
 		worksheet.write(9,12, "Cantidad",boldbord)
+		worksheet.write(8,13, "Salida",boldbord)
 		worksheet.write(9,13, "Cantidad",boldbord)
+		worksheet.write(8,14, "Saldo",boldbord)
 		worksheet.write(9,14, "Cantidad",boldbord)
-		worksheet.write(9,15, "Cliente",boldbord)
-		worksheet.write(9,16, "Nro Factura",boldbord)
 
+		worksheet.merge_range(8,15,9,15, u"Cliente",boldbord)
+		worksheet.merge_range(8,16,9,16, u"Nro Guia",boldbord)
+		worksheet.merge_range(8,17,9,17, u"Nro. Factura",boldbord)		
 
 
 
@@ -705,8 +710,8 @@ vstf.name as "Doc. Almacén",
 vstf.entrada as "Entrada",
 vstf.salida as "Salida",
 rp.name as partner,
-am.ref as comprobante
---sp.numberg as guia
+am.ref as comprobante,
+sp.numberg as guia
 
 from
 (""" +si_existe+ """	
@@ -739,25 +744,7 @@ almacen,producto,lote,vstf.fecha;
 		almacen = None
 		producto = None
 		lote = None
-
-		tiempo_inicial = datetime.datetime.now()
-		tiempo_pasado = [0,0]
-		cont_report = 0
-
-		total_all = self.env.cr.fetchall()
-		for line in total_all:
-			cont_report += 1
-			if cont_report%300 == 0:
-				tiempo_pasado = divmod((datetime.datetime.now()-tiempo_inicial).seconds,60)
-				text_report = ""
-				text_report = "<b>Generando Kardex Fisico x Lote.</b><br/><center>Total lineas a procesar: "+str(len(total_all)) + "</center><br/><center>Procesado:"+str(cont_report)+"/"+str(len(total_all))+"</center><br/> Tiempo Procesado: "+ str(tiempo_pasado[0])+" minutos " +str(tiempo_pasado[1]) + " segundos" 
-				text_report += """<div id="myProgress" style="position: relative; width: 100%;  height: 30px;   background-color: white;">
-				  <div id="myBar" style="position: absolute;  width: """+"%.2f"%(cont_report*100/len(total_all))+"""%;  height: 100%; background-color: #875A7B;">
-					<div id="label" style="text-align: center; line-height: 30px; color: white;">""" +"%.2f"%(cont_report*100/len(total_all))+ """%</div>
-				  </div>
-				</div>"""
-				self.send_message(text_report)
-
+		for line in self.env.cr.fetchall():
 			if almacen == None:
 				almacen = (line[4] if line[4] else '')
 				producto = (line[7] if line[7] else '')
@@ -787,8 +774,8 @@ almacen,producto,lote,vstf.fecha;
 			worksheet.write(x,13,line[13] if line[13] else 0 ,numberdos )
 			worksheet.write(x,14,saldo ,numberdos )
 			worksheet.write(x,15,line[14] if line[14] else '' ,bord )
-			#worksheet.write(x,16,line[16] if line[16] else '' ,bord )
-			worksheet.write(x,16,line[15] if line[15] else '' ,bord )
+			worksheet.write(x,16,line[16] if line[16] else '' ,bord )
+			worksheet.write(x,17,line[15] if line[15] else '' ,bord )
 
 
 			x = x +1
@@ -817,17 +804,17 @@ almacen,producto,lote,vstf.fecha;
 		worksheet.set_column('S:S', tam_col[18])
 		worksheet.set_column('T:Z', tam_col[19])
 
-
 		workbook.close()
-		output.seek(0)
+
+
+		f = open(direccion + 'kardex_producto.xlsx', 'rb')
 
 		attach_id = self.env['ir.attachment'].create({
-					'name': "Kardex Fisico.xlsx",
+					'name': "Kardex Fisico x Lote.xlsx",
 					'type': 'binary',
-					'datas': base64.encodestring(output.read()),
+					'datas': base64.encodestring(b''.join(f.readlines())),
 					'eliminar_automatico': True
 				})
-		output.close()
 		
 		return {
 			'type': 'ir.actions.client',

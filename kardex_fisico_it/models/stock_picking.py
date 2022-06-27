@@ -102,13 +102,14 @@ class PickingType(models.Model):
 
 	def button_validate(self):
 		t = super(PickingType,self).button_validate()
-		if not self.kardex_date:
-			self.with_context({'permitido':1}).write({'kardex_date': fields.Datetime.now()})
-			for i in self:
-				i.move_ids_without_package.with_context({'permitido':1}).write({'kardex_date': fields.Datetime.now()})
-		else:
-			for i in self:
-				i.move_ids_without_package.with_context({'permitido':1}).write({'kardex_date': i.kardex_date})
+		if t==True:
+			if not self.kardex_date:
+				self.with_context({'permitido':1}).write({'kardex_date': fields.Datetime.now()})
+				for i in self:
+					i.move_ids_without_package.with_context({'permitido':1}).write({'kardex_date': fields.Datetime.now()})
+			else:
+				for i in self:
+					i.move_ids_without_package.with_context({'permitido':1}).write({'kardex_date': i.kardex_date})
 
 		return t
 
