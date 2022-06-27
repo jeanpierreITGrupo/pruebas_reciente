@@ -7,6 +7,7 @@ class AccountBankBook(models.Model):
 	_description = 'Account Bank Book'
 	_auto = False
 	
+	
 	fecha = fields.Date(string='Fecha')
 	partner = fields.Char(string='Partner')
 	documento = fields.Char(string='Documento')
