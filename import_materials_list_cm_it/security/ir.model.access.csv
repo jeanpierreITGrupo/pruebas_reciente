@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_import_import_materials,import.materials,import_materials_list_cm_it.model_import_materials,,1,1,1,1

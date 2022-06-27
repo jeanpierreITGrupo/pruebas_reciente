@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data noupdate="0">
+		<record id="price_list_template_xls_requisition" model="ir.attachment">
+            <field name="name">requisition_template.xlsx</field>
+            <field name="type">binary</field>
+            <field name="datas" type="base64" file="import_purchase_requisition_cm_it/sample_import_file/Formato de Requerimientos de Compra.xlsx"/>
+        </record>
+    </data>
+</odoo>

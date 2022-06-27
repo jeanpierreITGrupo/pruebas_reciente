@@ -1,0 +1,8 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+sale_guia,sale_guia,model_solicitud_production,,1,1,1,1
+sale_guia_line,sale_guia_line,model_solicitud_production_line,,1,1,1,1
+stage,stage,model_stage_mrpline,,1,1,1,1
+ratio,ratio,model_plantilla_ratios,,1,1,1,1
+ratio_line,ratio_line,model_plantilla_ratios_line,,1,1,1,1
+mrp_lines,mrp_lines,model_mrp_ratios_lines,,1,1,1,1
+empaquesm,emapquesm,model_empaque_stock_mv,,1,1,1,1

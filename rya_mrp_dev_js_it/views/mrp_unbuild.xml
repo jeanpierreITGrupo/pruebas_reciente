@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mrp_production" model="ir.ui.view">
+            <field name="name">mrp.unbuild.form</field>
+            <field name="model">mrp.unbuild</field>
+            <field name="inherit_id" ref="mrp.mrp_unbuild_form_view" />
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_validate']" position="attributes">
+                    <attribute name="groups">rya_mrp_dev_js_it.mrp_descontruir</attribute>
+                </xpath>
+            </field>
+    </record>
+</odoo>

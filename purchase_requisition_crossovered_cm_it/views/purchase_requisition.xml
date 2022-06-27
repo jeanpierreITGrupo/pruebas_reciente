@@ -1,0 +1,138 @@
+<odoo>
+  <data>
+
+    <record model="ir.actions.act_window" id="account_budget.act_crossovered_budget_view">
+        <field name="name">Budgets</field>
+        <field name="res_model">crossovered.budget</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="view_id" ref="account_budget.crossovered_budget_view_tree"/>
+        <field name="search_view_id" ref="account_budget.view_crossovered_budget_search"/>
+        <field name="view_ids" eval="[(5, 0, 0), 
+        (0, 0, {'view_mode': 'tree', 'view_id': ref('account_budget.crossovered_budget_view_tree')}), 
+        (0, 0, {'view_mode': 'form', 'view_id': ref('account_budget.crossovered_budget_view_form')}),                           
+        (0, 0, {'view_mode': 'kanban'})]"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Click to create a new budget.
+            </p>
+            <p>
+                Use budgets to compare actual with expected revenues and costs
+            </p>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_purchase_requisition_inherit_cross_form">
+      <field name="name">view_purchase_requisition_inherit_cross_form</field>
+      <field name="model">purchase.requisition</field>
+      <field name="inherit_id" ref="purchase_requisition.view_purchase_requisition_form"></field>
+      <field name="arch" type="xml">
+        <xpath expr="//sheet//button[@name='%(purchase_requisition.action_purchase_requisition_list)d']" position="after">
+          <button name="crossovered" type="object" class="oe_stat_button" icon="fa-money" string="Presupuesto">
+          </button>
+        </xpath>
+      </field>
+    </record>
+
+    <record model="ir.ui.view" id="crossovered_budget_2_view_tree">
+      <field name="name">crossovered.budget.view.2.tree</field>
+      <field name="model">crossovered.budget</field>
+      <field name="arch" type="xml">
+          <tree string="Budget">
+              <field name="name" colspan="1" readonly="1"/>
+              <field name="date_from"  readonly="1"/>
+              <field name="date_to"  readonly="1"/>
+              <field name="state"/>
+              <button name="view_form" type="object" string="Mostrar Presupuesto" class="oe_highlight"/>
+          </tree>
+      </field>
+    </record>
+
+    <record model="ir.ui.view" id="crossovered_budget_view_2_form">
+      <field name="name">crossovered.budget.view.2.form</field>
+      <field name="model">crossovered.budget</field>
+      <field name="arch" type="xml">
+          <form string="Budget">
+              <sheet string="Budget">
+                  <div class="oe_title">
+                      <label for="name"/>
+                      <h1>
+                          <field name="name" readonly="1" placeholder="e.g. Budget 2021: Optimistic"/>
+                      </h1>
+                  </div>
+                  <group>
+                      <group>
+                          <field name="user_id" readonly="1" domain="[('share', '=', False)]"/>
+                      </group>
+                      <group>
+                          <label for="date_from" string="Period"/>
+                          <div>
+                              <div name="date_edit_only" class="o_row oe_edit_only">
+                                  <span>From <field name="date_from" class='oe_inline' readonly="1"/></span>
+                                  <span>To <field name="date_to" class='oe_inline' readonly="1"/></span>
+                              </div>
+                              <div name="date_read_only" class="o_row oe_read_only">
+                                  <span attrs="{'invisible': [('date_from', '=', False)]}">From <field name="date_from" class='oe_inline' readonly="1"/></span>
+                                  <span attrs="{'invisible': [('date_to', '=', False)]}">To <field name="date_to" class='oe_inline' readonly="1"/></span>
+                              </div>
+                          </div>
+                          <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" readonly="1"/>
+                          <field name="state" invisible="1"/>
+                      </group>
+                  </group>
+                  <notebook>
+                      <page string="Budget Lines" name="budget_lines">
+                          <field name="crossovered_budget_line"
+                                 context="{'default_date_from': date_from,'default_date_to': date_to}" colspan="4"
+                                 nolabel="1" attrs="{'readonly':[('state','!=','draft')]}">
+                              <tree string="Budget Lines" decoration-success="is_above_budget and planned_amount &gt; 0" decoration-danger="is_above_budget and planned_amount &lt; 0" editable="bottom">
+                                  <field name="general_budget_id" domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]" readonly="1" />
+                                  <field name="analytic_account_id" domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]" groups="analytic.group_analytic_accounting" readonly="1"/>
+                                  <field name="date_from" readonly="1"/>
+                                  <field name="date_to" readonly="1"/>
+                                  <field name="paid_date" groups="base.group_no_one" readonly="1"/>
+                                  <field name="currency_id" invisible="1" readonly="1"/>
+                                  <field name="planned_amount" sum="Planned Amount" readonly="1"/>
+                                  <field name="practical_amount" sum="Practical Amount" readonly="1"/>
+                                  <field name="theoritical_amount" sum="Theoretical Amount" readonly="1"/>
+                                  <field name="percentage"  widget="percentage" readonly="1"/>
+                                  <!-- <button type="object" name="action_open_budget_entries" string="Entries..."
+                                          icon="fa-arrow-circle-o-right"/> -->
+                                  <field name="is_above_budget" invisible="1" readonly="1"/>
+                              </tree>
+                              <form string="Budget Lines">
+                                  <group>
+                                      <group>
+                                          <field name="currency_id" invisible="1" readonly="1"/>
+                                          <field name="general_budget_id" readonly="1"/>
+                                          <field name="planned_amount" readonly="1"/>
+                                          <field name="analytic_account_id"
+                                                 domain="['|', ('company_id', '=', parent.company_id), ('company_id', '=', False)]"
+                                                 groups="analytic.group_analytic_accounting" readonly="1"/>
+                                      </group>
+                                      <group>
+                                          <label for="date_from" string="Period"/>
+                                          <div>
+                                              <field name="date_from" class="oe_inline" readonly="1"/>
+                                              -
+                                              <field name="date_to" class="oe_inline" readonly="1"/>
+                                          </div>
+                                          <field name="paid_date" groups="base.group_no_one" readonly="1"/>
+                                          <field name="company_id" options="{'no_create': True}"
+                                                 groups="base.group_multi_company" readonly="1"/>
+                                      </group>
+                                  </group>
+                              </form>
+                          </field>
+                      </page>
+                  </notebook>
+              </sheet>
+              <div class="oe_chatter">
+                  <field name="message_follower_ids" groups="base.group_user"/>
+                  <field name="activity_ids"/>
+                  <field name="message_ids"/>
+              </div>
+          </form>
+      </field>
+    </record>
+  </data>
+</odoo>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mrp_production_form" model="ir.ui.view">
+            <field name="name">mrp.production</field>
+            <field name="model">mrp.production</field>
+            <field name="inherit_id" ref="mrp.mrp_production_form_view" />
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='bom_id']" position="before">
+                    <field name="product_qty_origin"  invisible="1"
+                           readonly="1" force_save="1" />
+                </xpath>
+                <xpath expr="//notebook/page[@name='components']/field/tree/field[@name='location_id']" position="after">
+                    <field name="solicitud_production" optional="show"/>
+                    <field name="raw_material_production_id"  invisible="1" />
+                    <field name="empaque_line"
+                           options="{'no_open': True, 'no_create': True}"
+                           domain="[('mrp_production_id','=',raw_material_production_id)]"
+                           optional="hidden" />
+                    <field name="stage_id" optional="show"/>
+                    <field name="should_consume_qty_store" optional="hidden"
+                           invisible="1"
+                           readonly="1" force_save="1" />
+                </xpath>
+                <xpath expr="//notebook" position="inside">
+                    <page string="Costos Operativos" name="costos_operativos">
+                        <group>
+                            <field name="plantilla_ratio" />
+                        </group>
+
+                        <field name="ratios" >
+                            <tree editable="bottom" >
+
+                                <field name="name" />
+                                <field name="quantity" />
+                                <field name="price_unit" />
+                                <field name="price_total" />
+
+                            </tree>
+
+                        </field>
+                    </page>
+
+                </xpath>
+            </field>
+    </record>
+</odoo>

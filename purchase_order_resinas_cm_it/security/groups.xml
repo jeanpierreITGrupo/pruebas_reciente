@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="group_purchase_request" model="res.groups">
+        <field name="name">Aprobadores de Requerimiento de Compra</field>
+    </record>
+    <!-- <record id="group_product_template" model="res.groups">
+        <field name="name">Gestión de Productos</field>
+    </record> -->
+</odoo>

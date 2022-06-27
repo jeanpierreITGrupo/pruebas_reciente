@@ -1,0 +1,146 @@
+<odoo>
+    <data>
+      <record model="ir.ui.view" id="view_department_inherit_analityc_form">
+        <field name="name">view_department_inherit_analityc_form</field>
+        <field name="model">hr.department</field>
+        <field name="inherit_id" ref="hr.view_department_form"></field>
+        <field name="arch" type="xml">
+          <field name="manager_id" position="after">
+            <field name="analytical_account" />
+          </field>
+        </field>
+      </record>
+
+      <record model="ir.ui.view" id="view_partner_inherit_depa_analityc_form">
+        <field name="name">view_partner_inherit_depa_analityc_form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"></field>
+        <field name="arch" type="xml">
+          <field name="function" position="after">
+            <field name="departament_analytic" />
+          </field>
+        </field>
+      </record>
+
+      <!-- <record model="ir.ui.view" id="crossovered_budget_view_inherit_domain_form">
+        <field name="name">crossovered_budget_view_inherit_domain_form</field>
+        <field name="model">crossovered.budget</field>
+        <field name="inherit_id" ref="account_budget.crossovered_budget_view_form"></field>
+        <field name="arch" type="xml">
+          <xpath expr="//field[@name='user_id']" position="after">
+            <field name="user_depa_analytic" />
+          </xpath>
+          <xpath expr="//page[@name='budget_lines']/field[@name='crossovered_budget_line']" position="attributes">
+            <attribute name="domain">[('analytic_account_id','=',False)]</attribute>
+          </xpath> 
+          <field name="theoritical_amount" position="after">
+            <field name="analytic_account_id" invisible="1"/>
+          </field>
+          <field name="crossovered_budget_line" position="attributes">
+            <attribute name="attrs">{'domain':[('analytic_account_id','=',False)]}</attribute>
+          </field>
+        </field>
+      </record> -->
+
+      <!-- <record model="ir.ui.view" id="crossovered_budget_view_domain_analytic_form">
+        <field name="name">crossovered.budget.view.analytic.form</field>
+        <field name="model">crossovered.budget</field>
+        <field name="arch" type="xml">
+            <form string="Budget">
+                <header>
+                    <button string="Confirm" name="action_budget_confirm" states="draft" type="object"
+                            class="oe_highlight"/>
+                    <button string="Approve" name="action_budget_validate" states="confirm" type="object"
+                            class="oe_highlight"/>
+                    <button string="Done" name="action_budget_done" states="validate" type="object"
+                            class="oe_highlight"/>
+                    <button string="Reset to Draft" name="action_budget_draft" states="cancel" type="object"/>
+                    <button string="Cancel Budget" name="action_budget_cancel" states="confirm,validate" type="object"/>
+                    <field name="state" widget="statusbar" />
+                </header>
+                <sheet string="Budget">
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" attrs="{'readonly':[('state','!=','draft')]}" placeholder="e.g. Budget 2021: Optimistic"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="user_id" attrs="{'readonly':[('state','!=','draft')]}" domain="[('share', '=', False)]"/>
+                        </group>
+                        <group>
+                            <label for="date_from" string="Period"/>
+                            <div>
+                                <div name="date_edit_only" class="o_row oe_edit_only">
+                                    <span>From <field name="date_from" class='oe_inline' attrs="{'readonly':[('state','!=','draft')]}"/></span>
+                                    <span>To <field name="date_to" class='oe_inline' attrs="{'readonly':[('state','!=','draft')]}"/></span>
+                                </div>
+                                <div name="date_read_only" class="o_row oe_read_only">
+                                    <span attrs="{'invisible': [('date_from', '=', False)]}">From <field name="date_from" class='oe_inline'/></span>
+                                    <span attrs="{'invisible': [('date_to', '=', False)]}">To <field name="date_to" class='oe_inline'/></span>
+                                </div>
+                            </div>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Budget Lines" name="budget_lines">
+                            <field name="crossovered_budget_line"
+                                   context="{'default_date_from': date_from,'default_date_to': date_to}" colspan="4"
+                                   nolabel="1" attrs="{'readonly':[('state','!=','draft')]}"
+                                   domain="[('analytic_account_id', '=', user_depa_analytic)]">
+                                <tree string="Budget Lines" decoration-success="is_above_budget and planned_amount &gt; 0" decoration-danger="is_above_budget and planned_amount &lt; 0" editable="bottom" domain="[('analytic_account_id', '=', 1)]">
+                                    <field name="general_budget_id" domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]" />
+                                    <field name="analytic_account_id" domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]" groups="analytic.group_analytic_accounting"/>
+                                    <field name="date_from"/>
+                                    <field name="user_depa_analytic" invisible="1"/>
+                                    <field name="date_to"/>
+                                    <field name="paid_date" groups="base.group_no_one"/>
+                                    <field name="currency_id" invisible="1"/>
+                                    <field name="planned_amount" sum="Planned Amount"/>
+                                    <field name="practical_amount" sum="Practical Amount"/>
+                                    <field name="theoritical_amount" sum="Theoretical Amount"/>
+                                    <field name="percentage"  widget="percentage" />
+                                    <button type="object" name="action_open_budget_entries" string="Entries..."
+                                            icon="fa-arrow-circle-o-right"/>
+                                    <field name="is_above_budget" invisible="1"/>
+                                </tree>
+                                <form string="Budget Lines">
+                                    <group>
+                                        <group>
+                                            <field name="currency_id" invisible="1"/>
+                                            <field name="general_budget_id"/>
+                                            <field name="planned_amount"/>
+                                            <field name="analytic_account_id"
+                                                   domain="['|', ('company_id', '=', parent.company_id), ('company_id', '=', False)]"
+                                                   groups="analytic.group_analytic_accounting"/>
+                                        </group>
+                                        <group>
+                                            <label for="date_from" string="Period"/>
+                                            <div>
+                                                <field name="date_from" class="oe_inline"/>
+                                                -
+                                                <field name="date_to" class="oe_inline"/>
+                                            </div>
+                                            <field name="paid_date" groups="base.group_no_one"/>
+                                            <field name="company_id" options="{'no_create': True}"
+                                                   groups="base.group_multi_company"/>
+                                        </group>
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" groups="base.group_user"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record> -->
+
+    </data>
+</odoo>

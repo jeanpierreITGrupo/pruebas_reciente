@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_modulo_standar_it_modulo_standar_it,modulo_standar_it.modulo_standar_it,model_modulo_standar_it_modulo_standar_it,base.group_user,1,1,1,1

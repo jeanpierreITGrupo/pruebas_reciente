@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		<record id="approve_sol_material" model="res.groups">
+			<field name="name">Aprobar Solicitud Material</field>
+			<field name="category_id" ref="base.module_category_hidden"/>
+		</record>
+
+		<record id="mrp_descontruir" model="res.groups">
+			<field name="name">Descontruir</field>
+			<field name="category_id" ref="base.module_category_hidden"/>
+		</record>
+	</data>
+</odoo>

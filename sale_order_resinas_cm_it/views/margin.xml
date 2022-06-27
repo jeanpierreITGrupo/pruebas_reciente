@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+
+    <record model="ir.ui.view" id="view_margin_sale_resinas_tree">
+        <field name="name">margin.sale.resinas</field>
+        <field name="model">margin.sale</field>
+        <field name="arch" type="xml">
+            <tree>
+              <field name="name" />
+              <field name="margin"/>          
+            </tree>
+        </field>
+      </record>
+
+    <record id="action_view_margin_sale" model="ir.actions.act_window">
+        <field name="name">Márgen establecido</field>
+        <field name="res_model">margin.sale</field>
+        <field name="context">{}</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem
+        id="margin_sale_menu"
+        parent="sale.menu_sale_config"
+        name="Márgen establecido"
+        action="action_view_margin_sale"
+        sequence="10"/>
+</odoo>

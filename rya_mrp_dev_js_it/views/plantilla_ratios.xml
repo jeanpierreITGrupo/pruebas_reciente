@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_plan_ratios" model="ir.actions.act_window">
+        <field name="name">Plantilla Ratios</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">plantilla.ratios</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+
+     <record id="search_forma" model="ir.ui.view">
+        <field name="name">solicitud.production</field>
+        <field name="model">solicitud.production</field>
+        <field name="arch" type="xml">
+            <search>
+                    <field name="name"  />
+
+            </search>
+        </field>
+   </record>
+
+
+    <record model="ir.ui.view" id="form_menu_ratios" >
+        <field name="name">plantilla.ratios.form</field>
+        <field name="model">plantilla.ratios</field>
+        <field name="arch" type="xml">
+            <form string="Integrity Sale">
+
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" />
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="period"  />
+
+                    </group>
+
+                    <notebook>
+                        <page string="Detalle">
+                            <field name="order_line"  >
+                                <tree editable="bottom" >
+                                    <field name="name"   />
+                                    <field name="cost_projected"   />
+                                    <field name="cost_real"   />
+                                </tree>
+
+                            </field>
+                        </page>
+                    </notebook>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <menuitem action="action_plan_ratios" id="menu_plan_ratios"
+              parent="mrp.menu_mrp_configuration"
+
+    />
+
+
+
+</odoo>

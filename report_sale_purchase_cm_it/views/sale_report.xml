@@ -1,0 +1,304 @@
+<odoo>
+    <data>
+      <template id="report_saleorder_document_it">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">                
+                <div class="header" />
+                <!-- <div class="header" style="font-size: 12px; 
+                                                    border-width: 1px; 
+                                                    border-style: solid; 
+                                                    border-color:#9c9c9c; 
+                                                    padding: 13px; 
+                                                    margin-left: -15px;
+                                                    margin-right: -15px;" >
+                    <div class="row">
+                        <div class="col-4">
+                            <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)" class="float-left" alt="Logo" style="max-height: 100px; max-width: 200px; vertical-align: baseline;"/>
+                        </div>
+                        <div class="col-3"></div>
+                        <div class="col-5" align="right">
+                            <span t-field="o.company_id.name"/><br/>
+                            <span class="text-center" t-field="o.company_id.street"/><br/>
+                            Telefono. <span t-field="o.company_id.phone"/><br/>
+                            Email. <span t-field="o.company_id.email"/><br/>                        
+                        </div>
+                  
+                    </div>
+                    <div class="row mb8 mt8">
+                        <div class="col-12">
+                            <br/>
+                            <span t-field="o.company_id.name" style="font-size: 13px; font_weight: bold;"/><br/>
+                            <span t-field="o.company_id.vat" style="font-size: 13px; font_weight: bold;"/><br/>
+                        </div>
+                    </div>
+                  
+                </div> -->
+                <div class="footer" align="left" style="font-size: 15px; margin-bottom: 15px;">
+                    
+                     <!-- <div class="row text-left" >
+                        Atte<br/>
+                        <span t-field="o.user_id.name"/><br/>
+                        U.N. ADHESIVOS Y ESPECIALIDADES QUIMICAS<br/>
+                        <span t-field="o.company_id.name"/><br/>
+                        <span t-field="o.company_id.street_name"/><br/>
+                        <pre style="display:inline;">Celular     <span t-field="o.user_id.partner_id.mobile"/></pre><br/>
+                        <pre style="display:inline;">Fijo        <span t-field="o.user_id.partner_id.phone"/></pre><br/> 
+                        <pre style="display:inline;">E mail      <span t-field="o.user_id.email"/></pre><br/>  
+                        <pre style="display:inline;">Web site    <span t-field="o.company_id.website"/></pre><br/>            
+                    </div>   -->
+                    <div class="row" style="background-color: #3BBFE8; font-size: 3px;">
+                        .
+                    </div>               
+                </div>
+                <t t-call="web.external_layout">                    
+                    <div class="page" style="font-size: 19px; color: black;">
+                          <div class="row" style="margin-left:-30px;">
+                              <div class="col-4">
+                                  <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)" class="float-left" alt="Logo" style="max-height: 100px; max-width: 250px; vertical-align: baseline;"/>
+                              </div>
+                              <div class="col-8"></div>                        
+                          </div>
+                          <div class="row mb8 mt8" align="right">
+                              <div class="col-12 " align="right" style="font_weight: bold;">
+                                <br/>
+                                Ventanilla, <span t-esc="context_timestamp(datetime.datetime.now())" t-options='{"widget": "date", "format": "dd MMMM Y"}'/> 
+                                
+                              </div>
+                          </div>
+                    
+                        <div class="row" style="margin-top: 16px; margin-bottom:16px; text-align: center;">
+                          <div class="col-2"></div>
+                          <div class="col-8" style="text-align: center;">
+                            <t t-if="o.state in ['draft','sent','to approve']">
+                              <strong><span style="font-size:25px; text-decoration: underline; text-align: center;">COTIZACIÓN N° <span t-field="o.name" /> </span></strong>
+                            </t>
+                            <t t-if="o.state in ['sale','done','cancel']">
+                              <strong><span style="font-size:25px; text-decoration: underline; text-align: center;">ÓRDEN DE VENTA N° <span t-field="o.name"/> </span></strong>
+                            </t>
+                          </div>
+                          <div class="col-2"></div>
+                        </div>
+
+                        <div class="row" style="margin-top: 14px; margin-bottom:14px;">
+                            <span >Señores:</span>
+                        </div>
+                        <div class="row" style="margin-top: 14px; margin-bottom:14px;">
+                            <strong><span t-field="o.partner_id.name"/></strong>
+                        </div>
+                        <div class="row" style="margin-top: 14px; margin-bottom:14px;">
+                          <strong>Pte.</strong>
+                        </div>
+                        <div class="row" style="margin-top: 14px; margin-bottom:14px;">
+                            Atención: Sr. <strong><span t-field="o.contact_partner_childs.name"/></strong>
+                        </div>
+                        <div class="row" style="margin-top: 14px; margin-bottom:14px;">
+                          <pre style="display:inline;">               </pre>Estimado señor, tengo el agrado de presentarles propuesta comercial actualizada de nuestros productos. 
+                        </div>
+                        <div class="row" style="margin-top: 14px; margin-bottom:14px;">
+                        </div>
+
+                        
+
+                        <t t-set="display_discount" t-value="any([l.discount for l in o.order_line])"/>
+                        <div class="row mt8 mb0" style="margin-right: -14px;">
+                            <br/>
+                            <table class="table">
+     
+                                <tr align="left">
+                                    <!-- <th align="center" style="border: 1px solid white; border-left: 1px solid #9c9c9c; color: white; background-color: #787777;" scope="col">ITEM</th>
+                                    <th align="center" style="border: 1px solid white; color: white; background-color: #787777;" scope="col">CANT.</th>
+                                    <th align="center" style="border: 1px solid white; color: white; background-color: #787777; width: 15%;" scope="col">CÓDIGO</th> -->
+                                    <th align="left" style="border: 1px solid black;color: black; background-color: transparent; width: 40%;" scope="col">PRODUCTO DESCRIPCIÓN</th>
+                                    <th align="left" style="border: 1px solid black;color: black; background-color: transparent; width: 35%;" scope="col">PRESENTACIÓN KG</th>
+                                    <!-- <th align="center" t-if="display_discount" style="border: 1px solid white; color: white; background-color: #787777;" scope="col">DSCTO (%)</th>
+                                    <th align="center" style="border: 1px solid white; width: 15%; color: white; background-color: #787777;" scope="col">PRECIO UNIT.</th> -->
+                                    <th align="left" style="border: 1px solid black; width: 25%; color: black; background-color: transparent;" scope="col">INVERSIÓN $ KG</th>
+                                </tr>
+                                <t t-set="contador" t-value="1"/>
+                                <t t-foreach="o.order_line" t-as="i">
+                                    <tr style="border: 1px solid;">
+                                        <t t-if="not i.display_type">
+                                            <!-- <td align="center" style="border: 1px solid #9c9c9c; padding:5px;margin:0px;"><t t-esc="str(contador)"/></td>
+                                            <td align="center" style="border: 1px solid #9c9c9c; padding:5px;margin:0px;"><t t-esc="int(i.product_uom_qty)"/></td>
+                                            <td align="center" style="border: 1px solid #9c9c9c; padding:5px;margin:0px; width: 15%;"><t t-esc="i.product_template_id.default_code"/></td> -->
+                                            <td align="left" style="border: 1px solid black; padding:5px;margin:0px; width: 40%; color: black;"><t t-esc="i.product_id.name"/></td>
+                                            <td align="left" style="border: 1px solid black; padding:5px;margin:0px; width: 35%; color: black;"><t t-esc="i.product_id.weight"/></td>
+                                            <!-- <td align="center" t-if="display_discount" style="border: 1px solid #9c9c9c; padding:5px;margin:0px;"><t t-esc="'{0:,.2f} %'.format(i.discount)"/></td> -->
+                                            <!-- <td align="right" style="border: 1px solid #9c9c9c; padding:5px;margin:0px;width: 15%;">
+                                                <t t-if="o.pricelist_id.currency_id.name == 'PEN'">
+                                                    <t t-esc="'S/ {0:,.2f}'.format(i.price_unit)"/>
+                                                </t>
+                                                <t t-if="o.pricelist_id.currency_id.name == 'USD'">
+                                                    <t t-esc="'$ {0:,.2f}'.format(i.price_unit)"/>
+                                                </t>
+                                            </td> -->
+                                            <td align="right" style="border: 1px solid black; padding:5px;margin:0px; width: 25%; color: black;">
+                                                <t t-if="o.pricelist_id.currency_id.name == 'PEN'">
+                                                    <t t-esc="'S/ {0:,.2f}'.format(i.peso_x_kg_comp)"/>
+                                                </t>
+                                                <t t-if="o.pricelist_id.currency_id.name == 'USD'">
+                                                    <t t-esc="'$ {0:,.2f}'.format(i.peso_x_kg_comp)"/>
+                                                </t>
+                                                
+                                            </td>
+                                            <t t-set="contador" t-value="contador+1" />
+                                        </t>    
+                                        <t t-if="i.display_type == 'line_section'">
+                                            <td name="td_section_line" colspan="99" style=" border: 1px solid black; color: black; background-color: transparent; font-weight: bold;">
+                                                <span t-field="i.name"/>
+                                            </td>
+                                            <t t-set="current_section" t-value="line"/>
+                                            <t t-set="current_subtotal" t-value="0"/> 
+                                        </t>
+                                        <t t-if="i.display_type == 'line_note'">
+                                            <td name="td_note_line" colspan="99" style=" border: 1px solid black; color: black; font-weight: bold;">   
+                                                <div style="margin-left: 10px; ">
+                                                    <span t-field="i.name" style="font-style: oblique;">  </span>
+                                                </div>                                           
+                                            </td>
+                                        </t>
+                                    </tr>
+                                    <t t-if="current_section and (line_last or doc.order_line[line_index+1].display_type == 'line_section')">
+                                        <tr class="is-subtotal text-right">
+                                            <td name="td_section_subtotal" colspan="99">
+                                                <strong class="mr16">Subtotal</strong>
+                                                <span
+                                                    t-esc="current_subtotal"
+                                                    t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'
+                                                />
+                                            </td>
+                                        </tr>
+                                    </t>
+                                    
+                                </t>
+                            </table>
+                        </div>
+                        <!-- <div class="row mt0" style="margin-right: -15px;">
+                            <div class="col-8">
+                            </div>
+                            <div class="col-4" style="float: right; margin-right: -15px;" >
+                                <table class="table" align="right" style="margin-right: -15px;">
+                                    <tbody style="border: 1px solid;">
+                                        <tr>
+                                            <th style="border: 1px solid white; padding:5px;margin:0px;color: white; background-color: #787777;" scope="row">SUB TOTALES</th>
+                                            <td align="right" style="border: 1px solid #9c9c9c; padding:5px;margin:0px;" scope="row"><span t-field="o.amount_untaxed"/></td>
+                                        </tr>
+                                        <tr>
+                                            <th style="border: 1px solid white; padding:5px;margin:0px;color: white; background-color: #787777;" scope="row">IGV(18%)</th>
+                                            <td align="right" style="border: 1px solid #9c9c9c; padding:5px;margin:0px;" scope="row"><span t-field="o.amount_tax"/></td>
+                                        </tr>
+                                        <tr>
+                                            <th style="border: 1px solid white; padding:5px;margin:0px;color: white; background-color: #787777;" scope="row">TOTAL</th>
+                                            <td align="right" style="border: 1px solid #9c9c9c; padding:5px;margin:0px;" scope="row"><span t-field="o.amount_total"/></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div> -->
+                        <t t-set="impuesto" t-value="False"/>
+                        <t t-foreach="o.order_line" t-as="line">
+                            <t t-set="impuesto" t-value="line.tax_id[0].name"/>
+                        </t>
+                        <div class="row" style="margin-top: 20px; margin-bottom:35px;">
+                          <div>
+                            <ul>
+                              <li> Precios:
+                                <t t-if="impuesto == 'IGV-VEN'">
+                                    NO incluyen IGV
+                                </t>
+                                <t t-if="impuesto == 'IGV-INC-V'">
+                                    SI incluyen IGV
+                                </t>
+                              </li>
+                              <li> Condición de pago: <span t-field="o.payment_term_id"/></li>
+                              <li> Validez de la propuesta: 15 días.</li>
+                              <li> Tiempo en atención: <span t-field="o.tiempo_atencion"/></li>
+                              <li> Tótem plástico * 1000 kg. <strong><span t-field="o.totem_plastico"/></strong></li>
+                              <li> Pedido mínimo: <span t-field="o.pedido_minimo"/></li>
+                              <li> Fecha de entrega: <span t-esc="o.commitment_date" t-options='{"widget": "date"}'/></li>
+                          </ul>
+                          </div>
+                        </div>
+                        <div class="row" style="margin-top: 14px; margin-bottom:14px;">
+                          Agradeciendo su atención; quedo de Ud.
+                        </div>
+                        <div class="row" style="margin-top: 14px; margin-bottom:14px;">
+                          Saludos cordiales.
+                        </div>
+
+
+
+                        <!-- FOOTER -->
+                        <div style="page-break-inside: avoid">
+                        <div class="row text-left" style="margin-top: 50px; margin-left:-30px; font-size: 15px; word-wrap: break-word;">
+                          <div class="col-6">
+                            Atte<br/>
+                            <strong><span t-field="o.user_id.name"/></strong><br/>
+                            U.N. ADHESIVOS Y ESPECIALIDADES QUIMICAS<br/>
+                            <strong><span t-field="o.company_id.name"/></strong><br/>
+                            <span t-field="o.company_id.street_name"/><br/>
+                          </div>
+                          <div class="col-6"></div>
+                        </div>
+
+                        <div class="row" style=" font-size: 15px; margin-left:-30px;">
+                          <div class="col-2">
+                            Celular<br/>
+                            Fijo<br/>
+                            E mail<br/>
+                            Web site<br/>
+                          </div>
+                          <div class="col-4">
+                            <span t-field="o.user_id.partner_id.mobile"/><br/>
+                            <span t-field="o.user_id.partner_id.phone"/><br/> 
+                            <span t-field="o.user_id.email"/><br/>
+                            <span t-field="o.company_id.website"/><br/> 
+                          </div>
+                          <div class="col-6"></div>
+                        </div>  
+                      </div>
+                                       
+                        
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+
+    <!-- <template id="sale.report_saleorder">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="sale_order_report_multicompany_it.report_saleorder_document_hemocare_it" t-lang="doc.partner_id.lang"/>
+            </t>
+        </t>
+    </template> -->
+
+    <record id="paperformat_frenchcheck" model="report.paperformat">
+        <field name="name">French Bank Check</field>
+        <field name="default" eval="False"/>
+        <field name="format">A4</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">15</field>
+        <field name="margin_bottom">25</field>
+        <field name="margin_left">30</field>
+        <field name="margin_right">20</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">45</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <report 
+            id="sale.action_report_saleorder"
+            string="Quotation / Order"
+            model="sale.order" 
+            report_type="qweb-pdf"
+            file="sale.report_saleorder" 
+            paperformat="report_sale_purchase_cm_it.paperformat_frenchcheck"
+            name="report_sale_purchase_cm_it.report_saleorder_document_it"
+            print_report_name="(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or 'Order - %s' % (object.name)"
+        />
+    </data>
+</odoo>

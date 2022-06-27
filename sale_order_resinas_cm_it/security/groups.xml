@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="group_partner_modify_credit" model="res.groups">
+        <field name="name">Modificadores de tipo de credito en clientes</field>
+    </record>
+    <!-- Esta aprobacion es en cuanto a los margenes de la venta -->
+    <record id="group_sale_order_approve" model="res.groups">
+        <field name="name">Aprobadores de Cotizacion</field>
+    </record>
+    <!-- <record id="group_sale_order_line_approve" model="res.groups">
+        <field name="name">Aprobadores de Costos de producto en cotizacion</field>
+    </record> -->
+    <record id="group_sale_line_edit_costo" model="res.groups">
+        <field name="name">Editor de costo en lineas de venta</field>
+    </record>
+</odoo>

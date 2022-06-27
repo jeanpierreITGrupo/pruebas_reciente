@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="mrp_bom_tree" model="ir.ui.view">
+            <field name="name">mrp.bom.tree</field>
+            <field name="model">mrp.bom</field>
+            <field name="inherit_id" ref="mrp.mrp_bom_tree_view" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='active']" position="replace">
+                    <field name="active" invisible="0"/>
+                </xpath>
+                <xpath expr="//tree" position="attributes">
+	                <attribute name="decoration-info">active==True</attribute>
+                    <attribute name="decoration-muted">active!=True</attribute>
+                </xpath>
+            </field>
+    </record>
+
+    <record id="mrp_bom_search" model="ir.ui.view">
+            <field name="name">mrp.bom.search</field>
+            <field name="model">mrp.bom</field>
+            <field name="inherit_id" ref="mrp.view_mrp_bom_filter" />
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='inactive']" position="after">
+                    <filter string="Todos" name="inactive_active" domain="['|',('active', '=', False),('active', '=', True)]"/>
+                </xpath>
+            </field>
+    </record>
+
+    <record id="mrp.template_open_bom" model="ir.actions.act_window">
+            <field name="context">{
+                'default_product_tmpl_id': active_id,
+                'search_default_product_tmpl_id': active_id ,
+                'search_default_inactive_active': 1 ,
+                }</field>
+            <field name="name">Bill of Materials</field>
+            <field name="res_model">mrp.bom</field>
+    </record>
+
+
+    <record id="mrp_bom_line" model="ir.ui.view">
+            <field name="name">mrp.bom</field>
+            <field name="model">mrp.bom</field>
+            <field name="inherit_id" ref="mrp.mrp_bom_form_view" />
+            <field name="arch" type="xml">
+                <xpath expr="//notebook/page[@name='components']/field/tree/field[@name='product_qty']" position="replace">
+                    <field name="percentaje" optional="show"    />
+                    <field name="product_qty" optional="show"   />
+                </xpath>
+                <xpath expr="//notebook/page[@name='components']/field/tree/field[@name='operation_id']" position="after">
+                    <field name="stage_id" optional="show"/>
+                </xpath>
+
+                <xpath expr="//notebook/page[@name='components']/field/tree/field[@name='product_id']" position="before">
+                    <field name="calculo" optional="show"/>
+                </xpath>
+
+                <xpath expr="//notebook/page[@name='components']" position="inside">
+                    <group name="note_group" col="6" class="mt-2 mt-md-0">
+                                <group colspan="4">
+
+                                </group>
+                                <group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
+                                    <field name="total_percentaje" colspan="2"/>
+                                    <field name="total_quantity" colspan="2"/>
+                                </group>
+                                <div class="oe_clear"/>
+                    </group>
+                </xpath>
+
+
+            </field>
+    </record>
+
+
+    <record id="action_stage" model="ir.actions.act_window">
+        <field name="name">Etapa Componentes</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">stage.mrpline</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+
+    <menuitem action="action_stage" id="menu_stage"
+              parent="mrp.menu_mrp_configuration"
+
+    />
+
+</odoo>

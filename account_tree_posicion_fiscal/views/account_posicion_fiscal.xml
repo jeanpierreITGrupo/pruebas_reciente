@@ -1,0 +1,14 @@
+<odoo>
+    <data>        
+        <record id="view_invoice_add_posicion_fiscal_tree" model="ir.ui.view">
+            <field name="name">view.invoice.add.posicion.fiscal.tree</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_invoice_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='invoice_origin']" position="after">
+                    <field name="fiscal_position_id" optional="hide" string="Posición Fiscal"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

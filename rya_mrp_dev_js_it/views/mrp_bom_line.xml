@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mrp_bom_line" model="ir.ui.view">
+            <field name="name">mrp.bom</field>
+            <field name="model">mrp.bom</field>
+            <field name="inherit_id" ref="mrp.mrp_bom_form_view" />
+            <field name="arch" type="xml">
+                <xpath expr="//notebook/page[@name='components']/field/tree/field[@name='operation_id']" position="after">
+                    <field name="stage_id" optional="show"/>
+               </xpath>
+            </field>
+    </record>
+
+
+    <record id="action_stage" model="ir.actions.act_window">
+        <field name="name">Etapa Componentes</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">stage.mrpline</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+
+    <menuitem action="action_stage" id="menu_stage"
+              parent="mrp.menu_mrp_configuration"
+
+    />
+
+</odoo>

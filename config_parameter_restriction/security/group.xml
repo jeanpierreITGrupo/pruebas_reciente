@@ -1,0 +1,7 @@
+<odoo>
+    <data>
+        <record id="group_config_parameter_restriction" model="res.groups">
+            <field name="name">Parametros Del Sistema Solo Lectura</field>            
+        </record>
+    </data>
+</odoo>
