@@ -140,7 +140,6 @@ class stock_picking(models.Model):
 								'move_id':elem_move_picking.id,
 							}
 							self.env['stock.move.line'].create(move_line_vals)
-				
 				self.refresh()
 				self.move_line_ids_without_package.refresh()
 				for i in self.move_line_ids_without_package:
@@ -187,7 +186,6 @@ class stock_picking(models.Model):
 								cont += 1
 						else:
 							raise UserError("El nro de lotes es mayor para el producto: " +  lineas_por_actualizar[0].product_id.name)
-
 			else:
 				data = base64.b64decode(self.lotes_file).decode('utf-8')
 				info = data.split('\n')
